@@ -1,10 +1,14 @@
 import { MetadataRoute } from "next";
-import pages from "../data/pages.json";
+// import pages from "../data/pages.json"; // REMOVED
+import { getAllPageSlugs } from "@/lib/page-store";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://note.dropeco.dev";
 
-    const routes = Object.keys(pages).map((slug) => ({
+    const pageSlugs = await getAllPageSlugs();
+    const routes = pageSlugs.map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: new Date(),
     }));
