@@ -112,7 +112,17 @@ export function MarkdownSection({
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to save page (${response.status})`);
+          let errorMessage = `Failed to save page (${response.status})`;
+          try {
+            const errorData = await response.json();
+            if (errorData?.error) {
+              errorMessage += `: ${errorData.error}`;
+            }
+          } catch {
+            // ignore if json parsing fails
+          }
+          console.error(errorMessage); // Log the detailed message
+          throw new Error(errorMessage);
         }
 
         lastSavedRef.current = markdown;
