@@ -21,6 +21,14 @@ export const metadata: Metadata = {
   },
   description: "Copy notes across devices easily. A simple, fast, and efficient online notepad.",
   keywords: ["notepad", "online notes", "share notes", "note drop", "markdown editor"],
+  authors: [{ name: "Drop Eco Team" }],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Note-Drop: An Online Notepad",
     description: "Copy notes across devices easily. Share text and markdown instantly.",
@@ -36,6 +44,8 @@ export const metadata: Metadata = {
   },
 };
 
+import Script from "next/script";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,12 +53,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5282761256083147" crossOrigin="anonymous"></script>
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5282761256083147"
+          crossOrigin="anonymous"
+          strategy="lazyOnload"
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
