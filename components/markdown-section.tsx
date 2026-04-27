@@ -30,6 +30,7 @@ export function MarkdownSection({
     "markdown"
   );
   const [markdown, setMarkdown] = useState(initialMarkdown);
+  const [debouncedMarkdown, setDebouncedMarkdown] = useState(initialMarkdown);
   const [rendered, setRendered] = useState(initialHtml);
   const [toggleValue, setToggleValue] = useState<string | undefined>(undefined);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -56,7 +57,9 @@ export function MarkdownSection({
 
   useEffect(() => {
     lastSavedRef.current = initialMarkdown;
+    lastSavedRef.current = initialMarkdown;
     setMarkdown(initialMarkdown);
+    setDebouncedMarkdown(initialMarkdown);
     setRendered(initialHtml);
     setToggleValue(undefined);
     setSaveState("saved");
@@ -68,11 +71,21 @@ export function MarkdownSection({
   }, [initialMarkdown, initialHtml, slug]);
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedMarkdown(markdown);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [markdown]);
+
+  useEffect(() => {
     let shouldUpdate = true;
 
     remark()
       .use(html)
-      .process(markdown)
+      .process(debouncedMarkdown)
       .then((file) => {
         if (shouldUpdate) {
           setRendered(String(file));
@@ -80,14 +93,14 @@ export function MarkdownSection({
       })
       .catch(() => {
         if (shouldUpdate) {
-          setRendered(markdown);
+          setRendered(debouncedMarkdown);
         }
       });
 
     return () => {
       shouldUpdate = false;
     };
-  }, [markdown]);
+  }, [debouncedMarkdown]);
 
   useEffect(() => {
     if (markdown === lastSavedRef.current) {

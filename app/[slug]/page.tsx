@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import { remark } from "remark";
 import html from "remark-html";
 
@@ -19,8 +19,7 @@ type PageProps = {
 };
 
 export async function generateMetadata(
-  { params }: PageProps,
-  parent: ResolvingMetadata
+  { params }: PageProps
 ): Promise<Metadata> {
   const { slug } = await params;
   const markdown = await getPageMarkdown(slug);

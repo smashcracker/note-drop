@@ -19,8 +19,8 @@ export async function getPageMarkdown(slug: string): Promise<string | null> {
     const filePath = getFilePath(slug);
     const content = await fs.readFile(filePath, "utf8");
     return content;
-  } catch (err: any) {
-    if (err.code === "ENOENT") {
+  } catch (err: unknown) {
+    if (typeof err === "object" && err !== null && "code" in err && (err as { code: string }).code === "ENOENT") {
       return null;
     }
     throw err;
